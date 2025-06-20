@@ -1,1 +1,8 @@
-{}
+{
+  "3817399452@qq.com": {
+    "username": "\u5b98\u65b9\u6d4b\u8bd5",
+    "password_hash": "bbcf0e8482d1d30460c564c4475c9b6c982789e3d2e3bf41089a1d719ec39e55",
+    "salt": "5d298802db9904cfdc676b26861ce43e",
+    "email": "3817399452@qq.com"
+  }
+}
