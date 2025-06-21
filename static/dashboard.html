@@ -86,49 +86,44 @@
     </div>
 
     <script>
-        // 检查登录状态
-        async function checkAuth() {
-            try {
-                const response = await fetch('/api/check-auth', {
-                    credentials: 'same-origin'
-                });
-                const data = await response.json();
-                
-                if (!data.authenticated) {
-                    window.location.href = '/';
-                } else {
-                    // 显示用户信息
-                    document.getElementById('username').textContent = data.user.username;
-                    document.getElementById('welcome-username').textContent = data.user.username;
-                    document.getElementById('user-email').textContent = data.user.email;
-                    document.getElementById('user-username').textContent = data.user.username;
-                    document.getElementById('user-avatar').textContent = data.user.username.charAt(0).toUpperCase();
-                }
-            } catch (error) {
-                console.error('检查登录状态失败:', error);
-                window.location.href = '/';
-            }
+// 增强版认证检查
+async function checkAuth() {
+    try {
+        const res = await fetch('/api/check-auth', { 
+            credentials: 'include' 
+        });
+        
+        if (!res.ok) throw new Error();
+        
+        const { authenticated, user } = await res.json();
+        if (!authenticated) {
+            const redirect = new URLSearchParams(window.location.search).get('redirect');
+            window.location.href = `/?redirect=${redirect || '/dashboard'}`;
+            return;
         }
 
-        // 登出
-        document.getElementById('logout-btn').addEventListener('click', async () => {
-            try {
-                const response = await fetch('/api/logout', {
-                    method: 'POST',
-                    credentials: 'same-origin'
-                });
-                const data = await response.json();
-                
-                if (data.success) {
-                    window.location.href = '/';
-                }
-            } catch (error) {
-                console.error('登出失败:', error);
-            }
+        // 渲染用户数据
+        document.querySelectorAll('[data-user]').forEach(el => {
+            el.textContent = user[el.dataset.user];
         });
+        document.getElementById('avatar').textContent = user.username.charAt(0).toUpperCase();
+    } catch (err) {
+        console.error('Auth check failed:', err);
+        window.location.href = '/';
+    }
+}
 
-        // 页面加载时检查登录状态
-        document.addEventListener('DOMContentLoaded', checkAuth);
+// 登出处理
+document.getElementById('logout').addEventListener('click', async () => {
+    await fetch('/api/logout', { 
+        method: 'POST', 
+        credentials: 'include' 
+    });
+    window.location.href = '/';
+});
+
+// 初始化检查
+document.addEventListener('DOMContentLoaded', checkAuth);
     </script>
 </body>
 </html>
