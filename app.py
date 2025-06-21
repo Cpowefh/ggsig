@@ -1,35 +1,85 @@
-from flask import Flask, request, jsonify, send_from_directory
-import requests
-import base64
+from flask import Flask, request, jsonify, session, send_from_directory
+from dotenv import load_dotenv
 import os
 import hashlib
+import requests
+import base64
 import json
 
-# 兼容本地开发和 Vercel 环境变量
+# 环境变量加载
 if os.path.exists('.env'):
-    from dotenv import load_dotenv
     load_dotenv()
 
 app = Flask(__name__, static_folder='static')
 app.secret_key = os.getenv('SECRET_KEY', 'dev-secret-key')
+app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
+app.config['SESSION_COOKIE_SECURE'] = True  # 仅HTTPS
 
 # GitHub 配置
 GITHUB_TOKEN = os.getenv('GITHUB_TOKEN')
-REPO_OWNER = os.getenv('REPO_OWNER', 'your-username')
-REPO_NAME = os.getenv('REPO_NAME', 'your-repo')
-USERS_FILE = 'users.json'
-GITHUB_API = 'https://api.github.com'
+REPO_OWNER = os.getenv('REPO_OWNER', 'Cpowefh')
+REPO_NAME = os.getenv('REPO_NAME', 'ggsig')
 
 headers = {
     "Authorization": f"token {GITHUB_TOKEN}",
     "Accept": "application/vnd.github.v3+json"
 }
 
-def get_file_sha(filename):
-    """获取文件SHA哈希"""
-    url = f"{GITHUB_API}/repos/{REPO_OWNER}/{REPO_NAME}/contents/{filename}"
-    try:
-        response = requests.get(url, headers=headers, timeout=5)
+# [保留原有的工具函数 get_file_sha, hash_password, get_users_data, save_users_data]
+
+@app.route('/api/register', methods=['POST'])
+def register():
+    # [保留原有注册逻辑]
+    return jsonify({'success': True})
+
+@app.route('/api/login', methods=['POST'])
+def login():
+    data = request.get_json()
+    # [保留原有登录验证逻辑]
+    
+    # 设置会话
+    session.permanent = True
+    session['user'] = {
+        'email': email,
+        'username': username
+    }
+    
+    return jsonify({
+        'success': True,
+        'user': session['user']
+    })
+
+@app.route('/api/logout', methods=['POST'])
+def logout():
+    session.clear()
+    return jsonify({'success': True})
+
+@app.route('/api/check-auth', methods=['GET'])
+def check_auth():
+    if 'user' not in session:
+        return jsonify({'authenticated': False}), 401
+    return jsonify({
+        'authenticated': True,
+        'user': session['user']
+    })
+
+# 静态文件路由
+@app.route('/')
+def index():
+    return send_from_directory('static', 'index.html')
+
+@app.route('/dashboard')
+def dashboard():
+    return send_from_directory('static', 'dashboard.html')
+
+# Vercel 适配器
+def vercel_handler(request):
+    with app.app_context():
+        response = app.full_dispatch_request()
+    return response
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=int(os.getenv('PORT', 5000)))requests.get(url, headers=headers, timeout=5)
         response.raise_for_status()
         return response.json().get('sha', '')
     except Exception as e:
