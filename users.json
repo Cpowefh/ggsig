@@ -4,5 +4,11 @@
     "password_hash": "f9fec7a82aed578ed3afc9c6f5a5baa38010f4714c2ce1c96c16d227a5c56ff5",
     "salt": "ded75348b4d1defcc8942cba5de6f9b2",
     "email": "1"
+  },
+  "2": {
+    "username": "\u5b98\u65b9\u6d4b\u8bd5",
+    "password_hash": "24c2873ba3724f4b4b8d70cce155a3da31304481618af06dfe1dcda3f7f42687",
+    "salt": "414b2b4ac4558a453c1a9a9570634492",
+    "email": "2"
   }
 }
