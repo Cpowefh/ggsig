@@ -1,1 +1,8 @@
-{}
+{
+  "1": {
+    "username": "\u5b98\u65b9\u6d4b\u8bd5",
+    "password_hash": "f9fec7a82aed578ed3afc9c6f5a5baa38010f4714c2ce1c96c16d227a5c56ff5",
+    "salt": "ded75348b4d1defcc8942cba5de6f9b2",
+    "email": "1"
+  }
+}
