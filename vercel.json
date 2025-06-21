@@ -13,13 +13,17 @@
   "routes": [
     {
       "src": "/api/(.*)",
-      "dest": "app.py"
+      "dest": "app.py",
+      "headers": {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Credentials": "true"
+      }
     },
     {
       "src": "/dashboard",
       "dest": "/static/dashboard.html",
       "headers": {
-        "Cache-Control": "no-cache"
+        "Cache-Control": "no-store"
       }
     },
     {
