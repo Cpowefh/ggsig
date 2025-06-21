@@ -16,20 +16,19 @@
       "dest": "app.py"
     },
     {
-      "src": "/(.*)",
-      "dest": "/static/$1"
-    }
-  ],
-  {
-  "routes": [
-    {
       "src": "/dashboard",
-      "dest": "/static/dashboard.html"  # 或你的实际文件路径
+      "dest": "/static/dashboard.html",
+      "headers": {
+        "Cache-Control": "no-cache"
+      }
     },
     {
       "src": "/static/(.*)",
       "dest": "/static/$1"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/static/index.html"
     }
   ]
-}
 }
