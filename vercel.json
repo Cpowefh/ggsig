@@ -19,5 +19,17 @@
       "src": "/(.*)",
       "dest": "/static/$1"
     }
+  ],
+  {
+  "routes": [
+    {
+      "src": "/dashboard",
+      "dest": "/static/dashboard.html"  # 或你的实际文件路径
+    },
+    {
+      "src": "/static/(.*)",
+      "dest": "/static/$1"
+    }
   ]
+}
 }
